@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tapipan Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 1em;
+        }
+        .post-list, .post-detail {
+            display: none;
+        }
+        .post {
+            background: #fff;
+            padding: 1em;
+            margin-bottom: 1em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .post h2 {
+            margin-top: 0;
+        }
+        .post-list .post {
+            cursor: pointer;
+        }
+        .post-list .post:hover {
+            background-color: #f0f0f0;
+        }
+        .comment-form input, .comment-form textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .comment-form textarea {
+            height: 100px;
+        }
+        .comment-form button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 0.5em 1em;
+            margin: 0.5em 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .comment-form button:hover {
+            background-color: #0056b3;
+        }
+        .comments-list .comment {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+        }
+        .top-button {
+            display: block;
+            margin: 1em 0;
+            padding: 0.5em 1em;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .top-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tapipan Blog</h1>
+        <input type="text" id="search" placeholder="検索..." onkeyup="filterPosts()">
+        <div id="category-buttons">
+            <button onclick="filterCategory('all')">すべて</button>
+            <button onclick="filterCategory('旅行')">旅行</button>
+            <button onclick="filterCategory('料理')">料理</button>
+        </div>
+    </header>
+    <div class="container">
+        <!-- トップページの投稿リスト -->
+        <div class="post-list">
+            <div class="post" data-category="Blog" data-id="1" onclick="showPost(1)">
+                <h2>サイト開設しました！</h2>
+                <p><em>2024年9月13日</em></p>
+            </div>
+
+            <!--<div class="post" data-category="料理" data-id="2" onclick="showPost(2)">
+                <h2>新しいレシピを試しました</h2>
+                <p><em>2024年9月14日</em></p>
+            </div> -->
+
+            <!-- さらに記事を追加 -->
+        </div>
+        
+        <!-- 記事詳細ページ -->
+        <div class="post-detail">
+            <div class="post" id="post-1">
+                <h2>サイト開設しました！</h2>
+                <p><em>2024年9月13日</em></p>
+                <p>Tapipan Blog 始動です！！</p>
+                <p>頑張っていくのでよろしくお願いします！！</p>
+                
+
+                <div class="comments">
+                    <h3>コメント</h3>
+                    <div class="comment-form">
+                        <input type="text" id="comment-name-1" placeholder="名前">
+                        <textarea id="comment-text-1" placeholder="コメント"></textarea>
+                        <button onclick="addComment(1)">コメントを追加</button>
+                    </div>
+                    <div class="comments-list" id="comments-list-1"></div>
+                </div>
+                <button class="top-button" onclick="showPostList()">トップに戻る</button>
+            </div>
+
+
+            <!--<div class="post" id="post-2">
+                <h2>新しいレシピを試しました</h2>
+                <p><em>2024年9月14日</em></p>
+                <p>今日は新しいレシピを試しました...</p>
+                <div class="comments">
+                    <h3>コメント</h3>
+                    <div class="comment-form">
+                        <input type="text" id="comment-name-2" placeholder="名前">
+                        <textarea id="comment-text-2" placeholder="コメント"></textarea>
+                        <button onclick="addComment(2)">コメントを追加</button>
+                    </div>
+                    <div class="comments-list" id="comments-list-2"></div>
+                </div>
+                <button class="top-button" onclick="showPostList()">トップに戻る</button>
+            </div> -->
+
+        </div>
+    </div>
+
+    <script>
+        function filterPosts() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const posts = document.querySelectorAll('.post-list .post');
+            posts.forEach(post => {
+                const title = post.querySelector('h2').textContent.toLowerCase();
+                if (title.includes(search)) {
+                    post.style.display = 'block';
+                } else {
+                    post.style.display = 'none';
+                }
+            });
+        }
+
+        function filterCategory(category) {
+            const posts = document.querySelectorAll('.post-list .post');
+            posts.forEach(post => {
+                if (category === 'all' || post.getAttribute('data-category') === category) {
+                    post.style.display = 'block';
+                } else {
+                    post.style.display = 'none';
+                }
+            });
+        }
+
+        function showPost(postId) {
+            document.querySelector('.post-list').style.display = 'none';
+            document.querySelector('.post-detail').style.display = 'block';
+            
+            document.querySelectorAll('.post-detail .post').forEach(post => {
+                post.style.display = post.id === `post-${postId}` ? 'block' : 'none';
+            });
+        }
+
+        function showPostList() {
+            document.querySelector('.post-list').style.display = 'block';
+            document.querySelector('.post-detail').style.display = 'none';
+        }
+
+        function addComment(postId) {
+            const name = document.getElementById(`comment-name-${postId}`).value;
+            const text = document.getElementById(`comment-text-${postId}`).value;
+            if (name && text) {
+                const commentList = document.getElementById(`comments-list-${postId}`);
+                const comment = document.createElement('div');
+                comment.className = 'comment';
+                comment.innerHTML = `<strong>${name}</strong><p>${text}</p>`;
+                commentList.appendChild(comment);
+                document.getElementById(`comment-name-${postId}`).value = '';
+                document.getElementById(`comment-text-${postId}`).value = '';
+            }
+        }
+
+        // 初期表示設定
+        document.querySelector('.post-list').style.display = 'block';
+        document.querySelector('.post-detail').style.display = 'none';
+    </script>
+</body>
+</html>
